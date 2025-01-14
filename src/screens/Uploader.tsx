@@ -46,7 +46,7 @@ export default function UploaderScreen() {
                 ok(false);
             });
         }) === false) {
-            setError("Cannot get user info");
+            setError("Error getting user info");
             setLoading(false);
             return;
         }
@@ -54,7 +54,7 @@ export default function UploaderScreen() {
         try {
             const newToken = (await API.refreshToken(refreshToken));
             if (!newToken) {
-                setError("Cannot refresh token");
+                setError("Error refreshing token");
                 setLoading(false);
                 return;
             }
@@ -88,7 +88,7 @@ export default function UploaderScreen() {
             });
 
             if (!gatherinbgUploadEnpoint.ok) {
-                setError("Cannot upload image due to server error");
+                setError("Failed to upload (server error)");
                 setLoading(false);
                 return;
             }
@@ -96,7 +96,7 @@ export default function UploaderScreen() {
             const uploadEnpoint = gatherinbgUploadEnpoint.headers.get("X-Goog-Upload-URL");
 
             if (!uploadEnpoint) {
-                setError("Cannot upload image due to invalid enpoint");
+                setError("Failed to upload (invalid enpoint)");
                 setLoading(false);
                 return;
             }
@@ -115,7 +115,7 @@ export default function UploaderScreen() {
             });
 
             if (!uploadImage.ok) {
-                setError("Cannot upload image due to server error");
+                setError("Failed to upload (server error)");
                 setLoading(false);
                 return;
             }
@@ -132,7 +132,7 @@ export default function UploaderScreen() {
             });
 
             if (!getUrl.ok) {
-                setError("Cannot get image url");
+                setError("Failed to fetch image URL");
                 setLoading(false);
                 return;
             }
@@ -140,7 +140,7 @@ export default function UploaderScreen() {
             const imgToken = (await getUrl.json()).downloadTokens;
 
             if (!imgToken) {
-                setError("Cannot get image url");
+                setError("Failed to fetch image URL");
                 setLoading(false);
                 return;
             }
@@ -150,17 +150,17 @@ export default function UploaderScreen() {
             const createPost = await API.createPost(finalImageUrl, caption);
 
             if (!createPost) {
-                setError("Cannot create post");
+                setError("Failed to post");
                 setLoading(false);
                 return;
             }
 
-            setError("Image uploaded successfully!");
+            setError("Done!");
             setLoading(false);
             handleCancel();
         } catch (e: any) {
             console.error(e);
-            setError("Cannot upload image, please see console for more info");
+            setError("Failed to upload, check details");
             setLoading(false);
         }
     }, [caption, fileBuffer]);
@@ -190,7 +190,7 @@ export default function UploaderScreen() {
 
             const ctx = canvas.getContext('2d');
             if (!ctx) {
-                setError('Cannot convert image to WebP [CANVAS_NULLED]');
+                setError('Error converting image to WebP [CANVAS_NULLED]');
                 setLoading(false);
                 handleCancel();
                 return;
@@ -203,7 +203,7 @@ export default function UploaderScreen() {
                     if (blob) {
                         setFileBuffer(blob);
                     } else {
-                        setError('Cannot convert image to WebP');
+                        setError('Error converting image to WebP');
                         handleCancel();
                     }
                     setLoading(false);
@@ -232,12 +232,12 @@ export default function UploaderScreen() {
                                     onChange={(e) => {
                                         if (e.target.files && e.target.files[0]) {
                                             if (e.target.files[0].size > 10 * 1024 * 1024) {
-                                                setError("File size is too large");
+                                                setError("Image size exceeded limit");
                                                 handleCancel();
                                                 return;
                                             }
                                             if (e.target.files[0].type !== "image/jpeg" && e.target.files[0].type !== "image/png") {
-                                                setError("File is not supported");
+                                                setError("Unsupported file");
                                                 handleCancel();
                                                 return;
                                             }
@@ -261,8 +261,8 @@ export default function UploaderScreen() {
                                     <div className={cls.Icon}>
                                         <MdOutlineImage />
                                     </div>
-                                    <h2>drag and drop or click to select image</h2>
-                                    <p>only support jpeg and png and below 10mb</p>
+                                    <h2>drag and drop or click to choose image</h2>
+                                    <p>supports jpeg/png below 10MB</p>
                                 </div>}
                             </div>
                             <div className={clsMain.UserInfo}>

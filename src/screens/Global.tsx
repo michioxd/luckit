@@ -62,14 +62,14 @@ export default function GlobalScreen() {
                         chrome.runtime.sendMessage({ clearAllMoments: true });
                     }} className={menuItemClassName}>
                         <AiOutlineClear />
-                        Clear all saved moments
+                        Clear gallery
                     </MenuItem>
                     <MenuItem onClick={() => {
                         chrome.runtime.sendMessage({ actionLogout: true });
                         mainCtx.setLoggedIn(false);
                     }} className={menuItemClassName}>
                         <HiLogout />
-                        Logout
+                        Log out
                     </MenuItem>
                 </SubMenu>
                 <MenuItem onClick={() => setSection(2)} className={menuItemClassName}>
@@ -79,7 +79,7 @@ export default function GlobalScreen() {
                 <RefreshMenuItem />
                 <MenuItem onClick={() => setSection(1)} className={menuItemClassName}>
                     <GrAppsRounded />
-                    Saved moments
+                    Gallery
                 </MenuItem>
                 <MenuItem onClick={() => setSection(3)} className={menuItemClassName}>
                     <HiOutlineUpload />
