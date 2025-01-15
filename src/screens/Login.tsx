@@ -28,7 +28,7 @@ export default function LoginScreen() {
                 const user = await API.getAccountInfo(res.idToken);
 
                 if (!user.users[0]) {
-                    setError("Cannot get your info, please try again");
+                    setError("Something went wrong, please try again");
                     setLoading(false);
                     return;
                 }
@@ -43,17 +43,17 @@ export default function LoginScreen() {
                 });
                 return;
             }
-            setError("Cannot login, please try again");
+            setError("Unable to login!");
             setLoading(false);
         } catch (e: any) {
             const error = e as ResponseError<GenericError>;
             setLoading(false);
             setError(
                 error.error.message === 'INVALID_PASSWORD' ?
-                    'Invalid password' : error.error.message === "EMAIL_NOT_FOUND" ? "Email not found" :
+                    'Invalid password' : error.error.message === "EMAIL_NOT_FOUND" ? "We couldn't find your email, check again" :
                         error.error.message === "INVALID_EMAIL" ? "Invalid email" :
                             error.error.message === "USER_DISABLED" ? "User is disabled" :
-                                "An error occurred (" + error.error.message + ")");
+                                "We encountered an error: (" + error.error.message + ")");
         }
     }, [email, mainCtx, password]);
 
@@ -67,22 +67,22 @@ export default function LoginScreen() {
             </div>
             <div className={clsx(cls.LoginWarn)}>
                 <div className={cls.Content}>
-                    <h1>Before you login...</h1>
-                    <p>This project is not affiliated with Locket or Locket Labs, Inc in anyway. By using this extension, you acknowledge that it is an unofficial Locket client, and you accept the risk that your account may be banned.
+                    <h1>Before you proceed...</h1>
+                    <p>This project is not affiliated with Locket or Locket Labs, Inc in any way. By using this extension, you acknowledge that it is an unofficial Locket client, and you accept the risk that your account may be banned.
                         <br />
-                        If you are not comfortable with this or you don't know what you are doing, please do not use this extension and remove it from your browser.
+                        If you are unsure about this or you don't know what you are doing, please refrain from using this extension.
                         <br />
-                        I (creator of this extension) will not be held responsible for any consequences.</p>
+                        I (luckit's creator) will not be held responsible for any consequences.</p>
                     <button
                         onClick={handleLogin}
                         className={clsx("btn")}>
-                        I known what I'm doing
+                        Continue
                     </button>
                     <button
                         className={clsx("btn btn-soft")}
                         onClick={() => setShowWarn(false)}
                     >
-                        Cancel
+                        Back
                     </button>
                 </div>
             </div>
@@ -94,7 +94,7 @@ export default function LoginScreen() {
                     <div className={cls.Title}>
                         <h1>welcome to luckit</h1>
                         <p>
-                            login to your Locket account to continue.
+                            please login to your Locket account.
                         </p>
                     </div>
                 </div>

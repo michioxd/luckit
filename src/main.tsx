@@ -20,8 +20,8 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 if (!chrome.runtime || !chrome.storage) {
-    document.body.innerHTML = '<b>Error:</b> Invalid working environment. Make sure you run it inside a Chrome extension!';
-    throw new Error('Invalid working environment. Make sure you run it inside a Chrome extension!');
+    document.body.innerHTML = '<b>Error:</b> Invalid working environment. Make sure it is running inside a Chrome extension!';
+    throw new Error('Invalid working environment. Make sure it is running inside a Chrome extension!');
 }
 
 createRoot(document.getElementById('luckit_app')!).render(
