@@ -121,7 +121,7 @@ async function FetchLatestMoment() {
     if (await new Promise((res) => {
         chrome.storage.local.get(['moments'], (result) => {
             if (result.moments) {
-                if (result.moments.some((m: SavedMomentType) => m.md5 === thisMoment.md5)) {
+                if (result.moments.some((m: SavedMomentType) => (m.md5 ?? md5(JSON.stringify(m))) === currentMD5)) {
                     console.log("moment already saved");
                     res(false);
                     return;
@@ -152,7 +152,7 @@ async function FetchLatestMoment() {
                         avatar: thisUser.data.profile_picture_url,
                         uid: thisUser.data.uid
                     },
-                    md5: thisMoment.md5,
+                    md5: currentMD5,
                     thumbnail_url: thisMoment.thumbnail_url,
                     seconds: thisMoment.date._seconds * 1000,
                     caption: thisMoment.caption
