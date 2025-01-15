@@ -10,11 +10,11 @@ An unofficial Locket extension to work on Chromium-based browser.
 
 ## Disclaimer
 
-This project is not affiliated with Locket or Locket Labs, Inc in anyway. By using this extension, you acknowledge that it is an unofficial Locket client, and you accept the risk that your account may be banned.
+This project is not affiliated with Locket or Locket Labs, Inc in any way. By using this extension, you acknowledge that it is an unofficial Locket client, and you accept the risk that your account may be banned.
 
-If you are not comfortable with this or you don't know what you are doing, please do not use this extension and remove it from your browser.
+If you're unsure about this or you don't know what you are doing, please refrain from using this extension.
 
-I (creator of this extension) will not be held responsible for any consequences.
+I (luckit's creator) won't be held responsible for any consequences.
 
 ## Features
 
