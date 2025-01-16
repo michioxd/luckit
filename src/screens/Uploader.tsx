@@ -7,6 +7,7 @@ import { VscClose } from 'react-icons/vsc';
 import Spinner from '../components/Spinner';
 import { UserType } from '../types/user';
 import { API } from '../services/api';
+import { randomString } from '../utils/string';
 
 export default function UploaderScreen() {
     const [file, setFile] = useState<null | File>(null);
@@ -32,7 +33,7 @@ export default function UploaderScreen() {
         setLoading(true);
 
         let userId = "", token = "", refreshToken = "";
-        const imageName = Date.now() + "_vtd182.webp";
+        const imageName = randomString(20) + ".webp";
 
         if (await new Promise((ok) => {
             chrome.storage.local.get(['user', 'token', 'refreshToken'], (result) => {
@@ -184,7 +185,10 @@ export default function UploaderScreen() {
 
         img.onload = () => {
             const canvas = document.createElement('canvas');
-            const size = Math.min(img.width, img.height);
+            const maxSize = 1020;
+            const size = Math.min(img.width, img.height, maxSize);
+            const scale = size / Math.min(img.width, img.height);
+
             canvas.width = size;
             canvas.height = size;
 
@@ -196,7 +200,10 @@ export default function UploaderScreen() {
                 return;
             }
 
-            ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, size, size);
+            const offsetX = (size - img.width * scale) / 2;
+            const offsetY = (size - img.height * scale) / 2;
+
+            ctx.drawImage(img, offsetX, offsetY, img.width * scale, img.height * scale);
 
             canvas.toBlob(
                 (blob) => {
