@@ -10,7 +10,7 @@ import { GrAppsRounded } from "react-icons/gr";
 import { AiOutlineClear } from "react-icons/ai";
 import { VERSION } from "../const";
 import { MdRefresh } from "react-icons/md";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SavedMomentType } from "../types/moments";
 import SavedMoment from "./SavedMoments";
 import { IoChevronBack } from "react-icons/io5";
@@ -43,6 +43,8 @@ export default function GlobalScreen() {
     const mainCtx = useMainContext();
     const [inItem, setInItem] = useState(0);
     const [section, setSection] = useState(0);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const confirmDeleteTimeout = useRef<NodeJS.Timeout | null>(null);
 
     return (
         <div className={cls.Global} data-section={section}>
@@ -59,10 +61,20 @@ export default function GlobalScreen() {
                     </>
                 } menuClassName={cls.Menu} className={cls.AccountMenu}>
                     <MenuItem onClick={() => {
-                        chrome.runtime.sendMessage({ clearAllMoments: true });
+                        if (confirmDelete) {
+                            chrome.runtime.sendMessage({ clearAllMoments: true });
+                            setConfirmDelete(false);
+                            clearTimeout(confirmDeleteTimeout.current!);
+                            return;
+                        }
+
+                        setConfirmDelete(true);
+                        confirmDeleteTimeout.current = setTimeout(() => {
+                            setConfirmDelete(false);
+                        }, 5e3);
                     }} className={menuItemClassName}>
                         <AiOutlineClear />
-                        Clear gallery
+                        {confirmDelete ? "Click again to confirm" : "Clear gallery"}
                     </MenuItem>
                     <MenuItem onClick={() => {
                         chrome.runtime.sendMessage({ actionLogout: true });
