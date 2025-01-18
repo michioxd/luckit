@@ -104,7 +104,9 @@ export default function PhoneNumberInput(props: {
                     menuButton={<MenuButton className={clsx("input")} style={{ display: "flex", alignItems: "center", borderRadius: '10px', height: '100%', cursor: 'pointer' }}
                     >
                         {flagsHandler?.hasFlag(country) ? createElement(flagsHandler.Flags[country as any as keyof typeof flagsHandler.Flags], { height: 18 }) : <div style={{ height: '18px', width: '27px' }}></div>}
-                    </MenuButton>}>
+                    </MenuButton>}
+                    transition
+                >
                     {selectFlagList}
                 </Menu>
                 <input
