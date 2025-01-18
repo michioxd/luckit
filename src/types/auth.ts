@@ -40,3 +40,16 @@ export interface RequestPhoneOTPResponseType {
 export interface VerifyPhoneOTPResponseType {
     token: string;
 }
+
+export interface ExchangeCustomTokenPayloadType {
+    returnSecureToken: boolean;
+    token: string;
+}
+
+export interface ExchangeCustomTokenResponseType {
+    expiresIn: string;
+    idToken: string;
+    isNewUser: boolean;
+    kind: string;
+    refreshToken: string;
+}

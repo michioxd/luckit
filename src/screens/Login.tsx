@@ -55,7 +55,9 @@ export default function LoginScreen() {
                 const res = await API.verifyOTP(phoneNumber, otpCode);
 
                 if (res.token) {
-                    const user = await API.getAccountInfo(res.token);
+                    const exchange = await API.exchangeOTPTokenForIDToken(res.token);
+
+                    const user = await API.getAccountInfo(exchange.idToken);
 
                     if (!user.users[0]) {
                         setError("Something went wrong, please try again");
@@ -64,8 +66,8 @@ export default function LoginScreen() {
                     }
 
                     chrome.storage.local.set({
-                        token: res.token,
-                        refreshToken: res.token,
+                        token: exchange.idToken,
+                        refreshToken: exchange.refreshToken,
                         user: user.users[0] as UserType
                     }, () => {
                         chrome.runtime.sendMessage({ fetchLatestMoment: true, login: true });
@@ -171,15 +173,6 @@ export default function LoginScreen() {
                             onE164ValueChange={(v) => setPhoneNumber(v)}
                             className={clsx("input", cls.Input)}
                         />
-                        {/* <input
-                            className={clsx("input", cls.Input)}
-                            disabled={loading || sentOtp}
-                            type="text"
-                            name="phone"
-                            placeholder="your phone number, start with +..."
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        /> */}
                         {sentOtp &&
                             <input
                                 style={{ marginTop: '0.5rem' }}

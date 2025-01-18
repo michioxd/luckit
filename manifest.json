@@ -13,7 +13,8 @@
     "permissions": [
         "storage",
         "unlimitedStorage",
-        "downloads"
+        "downloads",
+        "declarativeNetRequestWithHostAccess"
     ],
     "host_permissions": [
         "https://firebasestorage.googleapis.com/*",
@@ -29,5 +30,14 @@
         "name": "michioxd",
         "email": "michio.haiyaku@gmail.com"
     },
-    "homepage_url": "https://github.com/michioxd/luckit"
+    "homepage_url": "https://github.com/michioxd/luckit",
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "otpapi",
+                "enabled": true,
+                "path": "net_ruleset/otpapi.json"
+            }
+        ]
+    }
 }
