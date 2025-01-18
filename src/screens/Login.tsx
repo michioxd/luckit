@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import LuckitLogo from "../components/Logo";
 import cls from "./Login.module.scss";
 import clsx from "clsx";
-import { validateE164, validateEmail } from "../utils/string";
+import { validateEmail } from "../utils/string";
 import Spinner from "../components/Spinner";
 import { API, GenericError, ResponseError } from "../services/api";
 import { useMainContext } from "../MainContext";
@@ -19,6 +19,7 @@ export default function LoginScreen() {
     const [otpLogin, setOtpLogin] = useState(false);
     const [pNInput, setPNInput] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumberValid, setPhoneNumberValid] = useState(false);
     const [otpCode, setOtpCode] = useState("");
     const [sentOtp, setSentOtp] = useState(false);
 
@@ -171,6 +172,7 @@ export default function LoginScreen() {
                             value={pNInput}
                             onValueChange={(v) => setPNInput(v)}
                             onE164ValueChange={(v) => setPhoneNumber(v)}
+                            onSuccessChange={(v) => setPhoneNumberValid(v)}
                             className={clsx("input", cls.Input)}
                         />
                         {sentOtp &&
@@ -206,7 +208,7 @@ export default function LoginScreen() {
                     </>
                     }
                     {(otpLogin && !sentOtp) ? <button
-                        disabled={loading || !phoneNumber || !validateE164(phoneNumber)}
+                        disabled={loading || !phoneNumber || !phoneNumberValid}
                         className={clsx(cls.Button, "btn")}
                         onClick={() => handleSendOtp()}
                     >
@@ -214,11 +216,11 @@ export default function LoginScreen() {
                             <div className={cls.Loading}>
                                 <Spinner data-size="3" />
                             </div>
-                            : !validateE164(phoneNumber) ? "invalid phone number" : "send otp"}
+                            : !phoneNumberValid ? "invalid phone number" : "send otp"}
                     </button> :
                         <button
                             disabled={
-                                otpLogin ? !otpCode || otpCode.length < 6 || otpCode.length > 6 || !phoneNumber || !validateE164(phoneNumber) || loading :
+                                otpLogin ? !otpCode || otpCode.length < 6 || otpCode.length > 6 || !phoneNumber || !phoneNumberValid || loading :
                                     !email || !password || !validateEmail(email) || loading
                             }
                             className={clsx(cls.Button, "btn")}
