@@ -83,11 +83,13 @@ export default function PhoneNumberInput(props: {
                         setInternalValue(formatter.input(internalValue));
                     }
                 }}>
-                    <div style={{ display: "flex" }}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                         <div style={{ height: 23, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                             {FlagEl ? <FlagEl height={18} /> : country}
                         </div>
-                        <div className="HideText" style={{ marginLeft: 8 }}>{country}</div>
+                        <div className="HideText" style={{ marginLeft: 8 }}>
+                            +{libPhoneNumber.getCountryCallingCode(country as CountryCode)} <span style={{ color: 'gray' }}>{(new Intl.DisplayNames([navigator.language], { type: 'region' })).of(country)}</span>
+                        </div>
                     </div>
                 </MenuItem>
             ), country] as const;
