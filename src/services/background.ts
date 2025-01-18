@@ -176,7 +176,7 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 
     if (message.actionLogout) {
-        chrome.storage.local.remove(['token', 'refreshToken', 'user', 'unreadMoments'], () => {
+        chrome.storage.local.remove(['token', 'refreshToken', 'user', 'unReadMoments'], () => {
             chrome.runtime.sendMessage({ logout: true });
         });
     }
@@ -197,6 +197,7 @@ const loop = async () => {
 (async () => loop())();
 
 chrome.storage.local.get(['unReadMoments'], (result) => {
+    if (!result.unReadMoments || result.unReadMoments < 1) return;
     chrome.action.setBadgeBackgroundColor({ color: '#C773AF' }, () => {
         chrome.action.setBadgeText({ text: (result.unReadMoments || 0).toString() });
     });

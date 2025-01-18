@@ -35,10 +35,14 @@ export default function AboutScreen() {
                     <WhatIcon />
                 </div>
                 <p>
-                    &copy; {new Date().getFullYear()} <a target="_blank" href="https://github.com/michioxd">michioxd</a> powered.
+                    Released under <a target="_blank" href="https://github.com/michioxd/luckit/blob/main/LICENSE">MIT License</a>. Source code available on <a target="_blank" href="https://github.com/michioxd/luckit">GitHub</a>.
+                    <br />
+                    Thanks to our <a target="_blank" href="https://github.com/michioxd/luckit/graphs/contributors">contributors</a> for making this project better.
+                    <br />
+                    If you like this project, consider giving it a star on <a target="_blank" href="https://github.com/michioxd/luckit">GitHub</a>.
                 </p>
                 <p>
-                    Released under <a target="_blank" href="https://github.com/michioxd/luckit/blob/main/LICENSE">MIT License</a>. Source code available on <a target="_blank" href="https://github.com/michioxd/luckit">GitHub</a>.
+                    &copy; {new Date().getFullYear()} <a target="_blank" href="https://github.com/michioxd">michioxd</a> powered.
                 </p>
             </div>
         </div>
