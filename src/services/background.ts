@@ -202,3 +202,9 @@ const loop = async () => {
 };
 
 (async () => loop())();
+
+chrome.storage.local.get(['unReadMoments'], (result) => {
+    chrome.action.setBadgeBackgroundColor({ color: '#C773AF' }, () => {
+        chrome.action.setBadgeText({ text: (result.unReadMoments || 0).toString() });
+    });
+});
