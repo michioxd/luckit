@@ -12,11 +12,6 @@ export function parseJwt(token: string) {
     return JSON.parse(jsonPayload);
 }
 
-export function validateE164(phoneNumber: string) {
-    const reg = /^\+[1-9]\d{1,14}$/;
-    return reg.test(phoneNumber);
-}
-
 export const timeSinceOf = function (date: number) {
 
     const text = [
