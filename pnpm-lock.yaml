@@ -20,12 +20,18 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      country-flag-icons:
+        specifier: ^1.5.14
+        version: 1.5.14
       events:
         specifier: ^3.3.0
         version: 3.3.0
       js-md5:
         specifier: ^0.8.3
         version: 0.8.3
+      libphonenumber-js:
+        specifier: ^1.11.18
+        version: 1.11.18
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -903,6 +909,9 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+  country-flag-icons@1.5.14:
+    resolution: {integrity: sha512-GAFsVzHDu3bdAhbQ1LwBRqk/Ad8+ZzS5zU49P+lRla0KGy/V1V8ywNa1SxBOAmI/lyEOT9dfH3Q++q1lqJlvBA==}
+
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -1206,6 +1215,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.11.18:
+    resolution: {integrity: sha512-okMm/MCoFrm1vByeVFLBdkFIXLSHy/AIK2AEGgY3eoicfWZeOZqv3GfhtQgICkzs/tqorAMm3a4GBg5qNCrqzg==}
 
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
@@ -2375,6 +2387,8 @@ snapshots:
   convert-source-map@2.0.0:
     optional: true
 
+  country-flag-icons@1.5.14: {}
+
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -2702,6 +2716,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libphonenumber-js@1.11.18: {}
 
   locate-path@6.0.0:
     dependencies:

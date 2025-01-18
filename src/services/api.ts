@@ -1,4 +1,4 @@
-import { LoginPayloadType, LoginResponseType, RefreshTokenPayloadType, RefreshTokenResponseType } from "../types/auth"
+import { ExchangeCustomTokenPayloadType, ExchangeCustomTokenResponseType, LoginPayloadType, LoginResponseType, RefreshTokenPayloadType, RefreshTokenResponseType, RequestPhoneOTPResponseType, VerifyPhoneOTPResponseType } from "../types/auth"
 import { MomentType } from "../types/moments"
 import { GetAccountInfoResponseType, UserInfoType } from "../types/user"
 
@@ -63,14 +63,22 @@ export async function fetchFirebase<Request, ResponseOk, ResponseNotOk>({
 }
 
 export async function fetchLocket<Response>({
-    endpoint, method, body, token
+    endpoint, method, body, token, headers: cHeaders
 }: {
     endpoint: string,
     method: string,
     body?: any,
-    token?: string
+    token?: string,
+    headers?: HeadersInit
 }) {
     const headers = new Headers();
+
+    if (cHeaders) {
+        for (const [key, value] of Object.entries(cHeaders)) {
+            headers.append(key, value);
+        }
+    }
+
     headers.append('Content-Type', 'application/json');
 
     if (token) {
@@ -78,7 +86,9 @@ export async function fetchLocket<Response>({
     } else {
         await new Promise((res) => {
             chrome.storage.local.get("token", (data) => {
-                headers.append('Authorization', `Bearer ${data.token}`);
+                if (data.token)
+                    headers.append('Authorization', `Bearer ${data.token}`);
+
                 res(null);
             });
         });
@@ -115,6 +125,36 @@ export const API = {
             password,
             returnSecureToken: true,
             clientType: "CLIENT_TYPE_IOS"
+        }
+    }),
+    requestOTP: (phoneE164: string) => fetchLocket<RequestPhoneOTPResponseType>({
+        endpoint: "sendVerificationCode",
+        method: "POST",
+        body: {
+            data: {
+                deviceModel: "iPhone12,1",
+                operation: "hybrid",
+                phone: phoneE164,
+                use_password_if_available: false
+            }
+        }
+    }),
+    verifyOTP: (phoneE164: string, code: string) => fetchLocket<VerifyPhoneOTPResponseType>({
+        endpoint: "checkVerificationCode",
+        method: "POST",
+        body: {
+            data: {
+                phone: phoneE164,
+                verification_code: code
+            }
+        }
+    }),
+    exchangeOTPTokenForIDToken: (token: string) => fetchFirebase<ExchangeCustomTokenPayloadType, ExchangeCustomTokenResponseType, GenericError>({
+        endpoint: "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken",
+        method: "POST",
+        body: {
+            returnSecureToken: true,
+            token
         }
     }),
     refreshToken: (refreshToken: string) => fetchFirebase<RefreshTokenPayloadType, RefreshTokenResponseType, GenericError>({
