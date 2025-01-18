@@ -31,3 +31,12 @@ export interface RefreshTokenResponseType {
     user_id: string;
     project_id: string;
 }
+
+export interface RequestPhoneOTPResponseType {
+    method: string;
+    provider: string;
+}
+
+export interface VerifyPhoneOTPResponseType {
+    token: string;
+}

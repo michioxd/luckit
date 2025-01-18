@@ -1,4 +1,4 @@
-import { LoginPayloadType, LoginResponseType, RefreshTokenPayloadType, RefreshTokenResponseType } from "../types/auth"
+import { LoginPayloadType, LoginResponseType, RefreshTokenPayloadType, RefreshTokenResponseType, RequestPhoneOTPResponseType, VerifyPhoneOTPResponseType } from "../types/auth"
 import { MomentType } from "../types/moments"
 import { GetAccountInfoResponseType, UserInfoType } from "../types/user"
 
@@ -115,6 +115,28 @@ export const API = {
             password,
             returnSecureToken: true,
             clientType: "CLIENT_TYPE_IOS"
+        }
+    }),
+    requestOTP: (phoneE164: string) => fetchLocket<RequestPhoneOTPResponseType>({
+        endpoint: "sendVerificationCode",
+        method: "POST",
+        body: {
+            data: {
+                deviceModel: "iPhone12,1",
+                operation: "hybrid",
+                phone: phoneE164,
+                use_password_if_available: false
+            }
+        }
+    }),
+    verifyOTP: (phoneE164: string, code: string) => fetchLocket<VerifyPhoneOTPResponseType>({
+        endpoint: "verifyVerificationCode",
+        method: "POST",
+        body: {
+            data: {
+                phone: phoneE164,
+                verification_code: code
+            }
         }
     }),
     refreshToken: (refreshToken: string) => fetchFirebase<RefreshTokenPayloadType, RefreshTokenResponseType, GenericError>({

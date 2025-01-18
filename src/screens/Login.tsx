@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import LuckitLogo from "../components/Logo";
 import cls from "./Login.module.scss";
 import clsx from "clsx";
-import { validateEmail } from "../utils/string";
+import { validateE164, validateEmail } from "../utils/string";
 import Spinner from "../components/Spinner";
 import { API, GenericError, ResponseError } from "../services/api";
 import { useMainContext } from "../MainContext";
@@ -15,11 +15,74 @@ export default function LoginScreen() {
     const [showWarn, setShowWarn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [otpLogin, setOtpLogin] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [otpCode, setOtpCode] = useState("");
+    const [sentOtp, setSentOtp] = useState(false);
+
+    const handleSendOtp = useCallback(async () => {
+        setError("");
+        setLoading(true);
+
+        try {
+            const res = await API.requestOTP(phoneNumber);
+
+            if (res) {
+                setSentOtp(true);
+                setLoading(false);
+                return;
+            }
+            setError("Unable to send OTP!");
+            setLoading(false);
+        } catch (e: any) {
+            const error = e as ResponseError<GenericError>;
+            setLoading(false);
+            setError(
+                error.error.message === 'INVALID_PHONE_NUMBER' ? "Invalid phone number" :
+                    "Unable to send OTP: (" + error.error.message + ")");
+        }
+    }, [phoneNumber]);
 
     const handleLogin = useCallback(async () => {
         setError("");
         setShowWarn(false);
         setLoading(true);
+
+        if (otpLogin) {
+            try {
+                const res = await API.verifyOTP(phoneNumber, otpCode);
+
+                if (res.token) {
+                    const user = await API.getAccountInfo(res.token);
+
+                    if (!user.users[0]) {
+                        setError("Something went wrong, please try again");
+                        setLoading(false);
+                        return;
+                    }
+
+                    chrome.storage.local.set({
+                        token: res.token,
+                        refreshToken: res.token,
+                        user: user.users[0] as UserType
+                    }, () => {
+                        chrome.runtime.sendMessage({ fetchLatestMoment: true, login: true });
+                        mainCtx.setLoggedIn(true);
+                    });
+                    return;
+                }
+
+                setError("Unable to login!");
+                setLoading(false);
+            } catch (e: any) {
+                const error = e as ResponseError<GenericError>;
+                setLoading(false);
+                setError(
+                    error.error.message === 'INVALID_CODE' ? "Invalid OTP code" :
+                        "We encountered an error: (" + error.error.message + ")");
+            }
+            return;
+        }
 
         try {
             const res = await API.login(email, password);
@@ -55,7 +118,7 @@ export default function LoginScreen() {
                             error.error.message === "USER_DISABLED" ? "User is disabled" :
                                 "We encountered an error: (" + error.error.message + ")");
         }
-    }, [email, mainCtx, password]);
+    }, [otpLogin, phoneNumber, otpCode, mainCtx, email, password]);
 
     return (
         <div className={clsx(cls.Section, showWarn && cls.s1)}>
@@ -98,35 +161,79 @@ export default function LoginScreen() {
                         </p>
                     </div>
                 </div>
-                <div className={cls.Form}>
-                    <input
-                        className={clsx("input", cls.Input)}
-                        disabled={loading}
-                        type="text"
-                        placeholder="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        className={clsx("input", cls.Input)}
-                        disabled={loading}
-                        type="password"
-                        placeholder="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button
-                        disabled={!email || !password || !validateEmail(email) || loading}
+                <div className={cls.Form} data-otp-step={otpLogin ? sentOtp ? '2' : '1' : '0'}>
+                    {otpLogin ? <>
+                        <input
+                            className={clsx("input", cls.Input)}
+                            disabled={loading || sentOtp}
+                            type="text"
+                            name="phone"
+                            placeholder="your phone number, start with +..."
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                        />
+                        {sentOtp &&
+                            <input
+                                className={clsx("input", cls.Input)}
+                                disabled={loading}
+                                type="text"
+                                name="otp"
+                                placeholder="otp"
+                                value={otpCode}
+                                onChange={(e) => setOtpCode(e.target.value)}
+                            />
+                        }
+                    </> : <>
+                        <input
+                            className={clsx("input", cls.Input)}
+                            disabled={loading}
+                            type="text"
+                            name="email"
+                            placeholder="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <input
+                            className={clsx("input", cls.Input)}
+                            disabled={loading}
+                            type="password"
+                            placeholder="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </>
+                    }
+                    {(otpLogin && !sentOtp) ? <button
+                        disabled={loading || !phoneNumber || !validateE164(phoneNumber)}
                         className={clsx(cls.Button, "btn")}
-                        onClick={() => setShowWarn(true)}
+                        onClick={() => handleSendOtp()}
                     >
                         {loading ?
                             <div className={cls.Loading}>
                                 <Spinner data-size="3" />
                             </div>
-                            : "login"}
-                    </button>
+                            : !validateE164(phoneNumber) ? "invalid phone number" : "send otp"}
+                    </button> :
+                        <button
+                            disabled={
+                                otpLogin ? !otpCode || otpCode.length < 6 || otpCode.length > 6 || !phoneNumber || !validateE164(phoneNumber) || loading :
+                                    !email || !password || !validateEmail(email) || loading
+                            }
+                            className={clsx(cls.Button, "btn")}
+                            onClick={() => setShowWarn(true)}
+                        >
+                            {loading ?
+                                <div className={cls.Loading}>
+                                    <Spinner data-size="3" />
+                                </div>
+                                : "login"}
+                        </button>
+                    }
+                    <a className={cls.anotherMethod} onClick={() => { setOtpLogin(!otpLogin); setPhoneNumber(""); setOtpCode(""); }}>
+                        {otpLogin ? "login with email and password" : "login with phone number"}
+                    </a>
                 </div>
+
                 <p className={cls.forkMe}>
                     made with luv by <a target="_blank" href="https://github.com/michioxd">michioxd</a> - <a target="_blank" href="https://github.com/michioxd/luckit">fork me on github</a>
                 </p>

@@ -42,14 +42,32 @@
             .Input {
                 width: 100%;
                 max-width: 350px;
+                transition: 0.2s;
+                border-radius: 10px;
+                border-color: #000;
 
-                &[type="text"] {
+                &[name="email"] {
                     border-radius: 15px 15px 0px 0px;
                     border-bottom: 1px solid #000;
                 }
 
                 &[type="password"] {
                     border-radius: 0px 0px 15px 15px;
+                }
+
+
+            }
+
+            &[data-otp-step="2"] {
+                .Input {
+                    &[name="phone"] {
+                        border-radius: 15px 15px 0px 0px;
+                        border-bottom: 1px solid #000;
+                    }
+
+                    &[name="otp"] {
+                        border-radius: 0px 0px 15px 15px;
+                    }
                 }
             }
 
@@ -64,6 +82,14 @@
                     justify-content: center;
                     gap: 0.5rem;
                 }
+            }
+
+            .anotherMethod {
+                font-size: 12px;
+                margin-top: 0.6rem;
+                font-weight: 600;
+                color: var(--accent);
+                cursor: pointer;
             }
         }
 
