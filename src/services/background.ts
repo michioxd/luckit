@@ -176,7 +176,7 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 
     if (message.actionLogout) {
-        chrome.storage.local.remove(['token', 'refreshToken', 'user'], () => {
+        chrome.storage.local.remove(['token', 'refreshToken', 'user', 'unreadMoments'], () => {
             chrome.runtime.sendMessage({ logout: true });
         });
     }
