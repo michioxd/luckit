@@ -8,6 +8,7 @@ import { API, GenericError, ResponseError } from "../services/api";
 import { useMainContext } from "../MainContext";
 import { VscClose } from "react-icons/vsc";
 import { UserType } from "../types/user";
+import PhoneNumberInput from "../components/PhoneNumber";
 export default function LoginScreen() {
     const mainCtx = useMainContext();
     const [email, setEmail] = useState("");
@@ -16,6 +17,7 @@ export default function LoginScreen() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [otpLogin, setOtpLogin] = useState(false);
+    const [pNInput, setPNInput] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [otpCode, setOtpCode] = useState("");
     const [sentOtp, setSentOtp] = useState(false);
@@ -163,7 +165,13 @@ export default function LoginScreen() {
                 </div>
                 <div className={cls.Form} data-otp-step={otpLogin ? sentOtp ? '2' : '1' : '0'}>
                     {otpLogin ? <>
-                        <input
+                        <PhoneNumberInput
+                            value={pNInput}
+                            onValueChange={(v) => setPNInput(v)}
+                            onE164ValueChange={(v) => setPhoneNumber(v)}
+                            className={clsx("input", cls.Input)}
+                        />
+                        {/* <input
                             className={clsx("input", cls.Input)}
                             disabled={loading || sentOtp}
                             type="text"
@@ -171,9 +179,10 @@ export default function LoginScreen() {
                             placeholder="your phone number, start with +..."
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
+                        /> */}
                         {sentOtp &&
                             <input
+                                style={{ marginTop: '0.5rem' }}
                                 className={clsx("input", cls.Input)}
                                 disabled={loading}
                                 type="text"
@@ -229,7 +238,7 @@ export default function LoginScreen() {
                                 : "login"}
                         </button>
                     }
-                    <a className={cls.anotherMethod} onClick={() => { setOtpLogin(!otpLogin); setPhoneNumber(""); setOtpCode(""); }}>
+                    <a className={cls.anotherMethod} onClick={() => { setOtpLogin(!otpLogin); setPhoneNumber(""); setPNInput(""); setOtpCode(""); }}>
                         {otpLogin ? "login with email and password" : "login with phone number"}
                     </a>
                 </div>

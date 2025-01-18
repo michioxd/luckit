@@ -54,21 +54,6 @@
                 &[type="password"] {
                     border-radius: 0px 0px 15px 15px;
                 }
-
-
-            }
-
-            &[data-otp-step="2"] {
-                .Input {
-                    &[name="phone"] {
-                        border-radius: 15px 15px 0px 0px;
-                        border-bottom: 1px solid #000;
-                    }
-
-                    &[name="otp"] {
-                        border-radius: 0px 0px 15px 15px;
-                    }
-                }
             }
 
             .Button {
