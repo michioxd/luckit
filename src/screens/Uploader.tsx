@@ -216,7 +216,7 @@ export default function UploaderScreen() {
                     setLoading(false);
                 },
                 'image/webp',
-                1
+                0.9
             );
         };
     }, [file]);
@@ -238,7 +238,7 @@ export default function UploaderScreen() {
                                     ref={inputRef}
                                     onChange={(e) => {
                                         if (e.target.files && e.target.files[0]) {
-                                            if (e.target.files[0].size > 10 * 1024 * 1024) {
+                                            if (e.target.files[0].size > 4 * 1024 * 1024) {
                                                 setError("Image size exceeded limit");
                                                 handleCancel();
                                                 return;
@@ -269,7 +269,7 @@ export default function UploaderScreen() {
                                         <MdOutlineImage />
                                     </div>
                                     <h2>drag and drop or click to choose image</h2>
-                                    <p>supports jpeg/png below 10MB</p>
+                                    <p>supports jpeg/png below 4MB</p>
                                 </div>}
                             </div>
                             <div className={clsMain.UserInfo}>
