@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "luckit",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "stay tunned your friend moments",
     "action": {
         "default_popup": "index.html"
